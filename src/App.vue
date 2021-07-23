@@ -1,28 +1,93 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="app">
+    <carousel
+      @next="next"
+      @prev="prev"
+    >
+      <carousel-slide v-for="(slide,index) in slides" 
+      :key="slide"
+      :index="index"
+      :visibleSlide="visibleSlide"
+      :direction="direction">
+        <img :src="slide" />
+      </carousel-slide>
+      
+    </carousel>
+    
+    <div v-for="(slide,index) in slides" :key="index"  class="dot"
+    :active="visibleSlide === index">
+      
+    </div>
+    
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Carousel from './components/Carousel.vue';
+import CarouselSlide from './components/CarouselSlide.vue';
+
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Carousel,
+    CarouselSlide,
+  },
+  data() {
+    return {
+      slides: [
+         'https://picsum.photos/id/237/600/350',
+         'https://picsum.photos/id/236/600/350',
+         'https://picsum.photos/id/235/600/350',
+         'https://picsum.photos/id/234/600/350',
+         'https://picsum.photos/id/233/600/350',
+         'https://picsum.photos/id/232/600/350',
+      ],
+      visibleSlide : 0,
+      direction: 'left',
+
+    }
+  },
+  computed: {
+    slidesLen() {
+      return this.slides.length;      
+    },
+
+  },
+  methods : {
+    next() {
+        if(this.visibleSlide >= this.slidesLen - 1) {
+          this.visibleSlide = 0;
+        }else {
+          this.visibleSlide++;
+        }
+        this.direction = "left"
+    },
+    prev() {
+      if(this.visibleSlide <= 0) {
+          this.visibleSlide = this.slidesLen - 1;
+        }else {
+          this.visibleSlide--;
+        }
+         this.direction = "right"
+
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.dot {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background-color: gray;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 10px;
+  display: inline-block;
+  margin-right: 5px;
+}
+.dot:active {
+  background-color: red;
 }
 </style>
